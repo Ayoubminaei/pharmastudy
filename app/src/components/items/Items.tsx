@@ -660,30 +660,47 @@ export default function Items() {
             </div>
             
             {/* Image URL */}
-            <div className="space-y-2">
-              <Label>Image URL</Label>
-              <div className="flex gap-2">
-                <Input
-                  placeholder="https://..."
-                  value={formData.image_url}
-                  onChange={(e) => setFormData({ ...formData, image_url: e.target.value })}
-                  className="flex-1 border-[#c2cdd8]"
-                />
-                {formData.image_url && (
-                  <div className="w-10 h-10 rounded-lg border overflow-hidden flex-shrink-0">
-                    <img 
-                      src={formData.image_url} 
-                      alt="Preview" 
-                      className="w-full h-full object-cover"
-                      onError={(e) => {
-                        (e.target as HTMLImageElement).style.display = 'none';
-                      }}
-                    />
-                  </div>
-                )}
-              </div>
-            </div>
-            
+<div className="space-y-2">
+  <Label>Image</Label>
+  <div className="flex flex-col gap-2">
+    <Input
+      type="file"
+      accept="image/*"
+      onChange={async (e) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+
+        const fileName = `${crypto.randomUUID()}.${file.name.split('.').pop()}`;
+
+        const { data, error } = await supabase.storage
+          .from('items')
+          .upload(fileName, file);
+
+        if (error) {
+          toast.error('Upload failed: ' + error.message);
+          return;
+        }
+
+        const { data: publicData } = supabase.storage
+          .from('items')
+          .getPublicUrl(fileName);
+
+        setFormData({ ...formData, image_url: publicData.publicUrl });
+        toast.success('Image uploaded!');
+      }}
+      className="border-[#c2cdd8]"
+    />
+    {formData.image_url && (
+      <div className="w-20 h-20 rounded-lg border overflow-hidden">
+        <img 
+          src={formData.image_url} 
+          alt="Preview" 
+          className="w-full h-full object-cover"
+        />
+      </div>
+    )}
+  </div>
+</div>            
             {/* Structure Description */}
             <div className="space-y-2">
               <Label>Structure Description</Label>
