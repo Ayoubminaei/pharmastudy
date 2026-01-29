@@ -14,6 +14,6 @@ export default defineConfig({
   },
 });
 build: {
-    chunkSizeWarningLimit: 1500   // ← 1500 kB au lieu de 500 → warning disparaît
+    chunkSizeWarningLimit: 1500
   }
 });
