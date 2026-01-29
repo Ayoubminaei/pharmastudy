@@ -659,9 +659,10 @@ export default function Items() {
         const file = e.target.files?.[0];
         if (!file) return;
 
-        const fileName = `${Date.now()}-${Math.random().toString(36).substring(2, 10)}.${file.name.split('.').pop() || 'png'}`;
+        const extension = file.name.split('.').pop() || 'png';
+        const fileName = `${Date.now()}-${Math.random().toString(36).slice(2, 10)}.${extension}`;
 
-        const { data, error } = await supabase.storage
+        const { error } = await supabase.storage
           .from('items')
           .upload(fileName, file);
 
@@ -689,7 +690,7 @@ export default function Items() {
       </div>
     )}
   </div>
-</div>            
+</div>
             {/* Structure Description */}
             <div className="space-y-2">
               <Label>Structure Description</Label>
