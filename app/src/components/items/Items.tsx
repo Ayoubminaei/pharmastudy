@@ -649,17 +649,6 @@ export default function Items() {
             </div>
             
             {/* Description */}
-            <div className="space-y-2">
-              <Label>Description</Label>
-              <Textarea
-                placeholder="General description..."
-                value={formData.description}
-                onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                className="border-[#c2cdd8] min-h-[80px]"
-              />
-            </div>
-            
-            {/* Image URL */}
 <div className="space-y-2">
   <Label>Image</Label>
   <div className="flex flex-col gap-2">
@@ -670,7 +659,7 @@ export default function Items() {
         const file = e.target.files?.[0];
         if (!file) return;
 
-        const fileName = `${crypto.randomUUID()}.${file.name.split('.').pop()}`;
+        const fileName = `${Date.now()}-${Math.random().toString(36).substring(2, 10)}.${file.name.split('.').pop() || 'png'}`;
 
         const { data, error } = await supabase.storage
           .from('items')
